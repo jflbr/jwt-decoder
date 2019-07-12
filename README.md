@@ -1,22 +1,17 @@
 # jwt-decoder
 
+![](images/icon.png)
+
 Simple VS Code extension to decode your JSON Web Tokens (JWT)
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+The extension currently allows you to decode selected JWT strings in two different ways:
 
-For example if there is an image subfolder under your extension project workspace:
+### Selected JWT string within an VS Code untitled tab
 
-\!\[feature X\]\(images/feature-x.png\)
+- Animation is coming soon!
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+### Selected JWT string within any VS Code tab
 
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release
+- Animation is coming soon!

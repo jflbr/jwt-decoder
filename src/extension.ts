@@ -1,47 +1,91 @@
 
 import * as vscode from 'vscode';
 import { decodeToken } from './jwt';
+import { setHoverContent } from './jwt';
 
 
 export function activate(context: vscode.ExtensionContext) {
 
-	console.log('Extension "jwt-decoder" is now active!');
+    console.log('Extension "jwt-decoder" is now active!');
+    const contents = new vscode.MarkdownString();
+    contents.isTrusted = true;
+    let hover = new vscode.Hover(contents);
+
+    let hoverProvider = new class implements vscode.HoverProvider {
+
+        token: string;
+        tokenPosition: vscode.Position;
+
+        constructor(token: string, tokenPosition: vscode.Position) {
+            this.token = token;
+            this.tokenPosition = tokenPosition;
+        }
+
+        setToken(token: string) {
+            this.token = token;
+        }
+
+        setTokenPosition(position: vscode.Position) {
+            this.tokenPosition = position;
+        }
+
+        provideHover(
+        document: vscode.TextDocument,
+        _position: vscode.Position,
+        _token: vscode.CancellationToken
+    ): vscode.ProviderResult<vscode.Hover> {
+
+        if ( _position.isEqual(this.tokenPosition) || _position.line == this.tokenPosition.line)    
+            return hover;
+        return undefined;
+    }
+     }("", new vscode.Position(0,0));
+
+
+    vscode.languages.registerHoverProvider(
+        '*',
+        hoverProvider
+    );
 
 	let disposable = vscode.commands.registerTextEditorCommand('extension.jwt-decoder', async (textEditor, edit) => {
+        let token = null;
 
-		let selection = null;
 		if ( !textEditor.selection.isEmpty ) {
-			selection = textEditor.document.getText(textEditor.selection);
+            token = textEditor.document.getText(textEditor.selection);
+            hoverProvider.setToken(token);
+            hoverProvider.setTokenPosition(textEditor.selection.start);
 		}
 		else {
-			selection = await vscode.window.showInputBox({ placeHolder: 'Paste your base64 encoded JWT here' });
+			token = await vscode.window.showInputBox({ placeHolder: 'Paste your base64 encoded JWT here' });
 		}
-		if (selection === null){
+		if (token === null){
 			vscode.window.showWarningMessage("Base64 encoded JWT required");
 			return;
-		}
-		let decodedToken = decodeToken(selection);
-		let headers = JSON.stringify(decodedToken.headers);
-		let payload = JSON.stringify(decodedToken.payload);
+        }
+
+		let decodedToken = decodeToken(token);
+		let headers = JSON.stringify(decodedToken.headers, null, 4);
+		let payload = JSON.stringify(decodedToken.payload, null, 4);
 		// insert the result two lines below the JWT when the document is untitled
-		if ( textEditor.document.isUntitled && !textEditor.selection.isEmpty ){
-			if (textEditor.document.isUntitled){
-				var resultPosition = new vscode.Position((textEditor.selection.end.line + 2), 1);
-				edit.insert(resultPosition, '\n\n> Headers\n');
-				edit.insert(resultPosition, headers);
-				edit.insert(resultPosition, '\n\n> Payload\n');
-				edit.insert(resultPosition, payload);
-			}
-			// display the message inside a tooltip/hover box
-			else {
-				
-				var _ = new vscode.Hover({language: 'json', value: headers});
-				vscode.window.showWarningMessage('Hover feature is not available yet.');
-			}
-		}
+		if ( textEditor.document.isUntitled ){
+            var resultPosition = new vscode.Position((textEditor.selection.end.line + 2), 1);
+            edit.insert(resultPosition, '\n\n> Headers\n');
+            edit.insert(resultPosition, headers);
+            edit.insert(resultPosition, '\n\n> Payload\n');
+            edit.insert(resultPosition, payload);
+        }
+        // display the message inside a tooltip/hover box
+        else  if ( !( textEditor.document.isUntitled ) && !textEditor.selection.isEmpty ){
+            hoverProvider.setToken(token? token: '');
+            hoverProvider.setTokenPosition(textEditor.selection.start);
+
+            setHoverContent(hover, headers, payload);
+        }
 		// display the result inside a message box
 		else {
-			vscode.window.showInformationMessage(`Decoded JWT\n\n${headers}\n\n${payload}`);
+            hoverProvider.setToken('');
+			vscode.window.showInformationMessage(headers);
+			vscode.window.showInformationMessage(payload);
 		}
 	});
 

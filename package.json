@@ -2,8 +2,9 @@
 	"name": "jwt-decoder",
 	"displayName": "jwt-decoder",
 	"description": "A simple JWT decoder extension for VS Code",
-	"icon": "images/icon.png",
-	"version": "0.0.1",
+    "icon": "images/icon.png",
+    "publisher": "jflbr",
+	"version": "1.1.0",
 	"engines": {
 		"vscode": "^1.36.0"
 	},
@@ -39,5 +40,10 @@
 		"typescript": "^3.3.1",
 		"tslint": "^5.12.1",
 		"vscode-test": "^1.0.0-next.0"
-	}
+    },
+    "repository": {
+        "url": "https://github.com/jflbr/jwt-decoder.git",
+        "type": "git"
+    },
+    "homepage": "https://github.com/jflbr/jwt-decoder/blob/master/README.MD"
 }

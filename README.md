@@ -1,8 +1,6 @@
 # jwt-decoder
 
-![](images/icon.png)
-
-Simple VS Code extension to decode your JSON Web Tokens (JWT)
+A simple VS Code extension to decode your JSON Web Tokens (JWT)
 
 ## Command palette
 

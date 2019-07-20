@@ -3,6 +3,10 @@
 All notable changes to the "jwt-decoder" extension will be documented in this file.
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+## [1.1.1] 2019-07-20
+### Added
+- GIF demo in README 🎉🎉
+
 ## [1.1.0] 2019-07-20
 ### Added
 - Hover support 🎉🎉🔥🔥

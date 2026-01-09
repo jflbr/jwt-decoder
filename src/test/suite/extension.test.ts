@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import { before } from 'mocha';
 import * as vscode from 'vscode';
-import { decodeToken, setHoverContent } from '../../jwt';
+import { decodeToken, setHoverContent, isValidJWT } from '../../jwt';
 
 suite('JWT Decoder Extension Test Suite', () => {
 	before(() => {
@@ -116,6 +116,58 @@ suite('JWT Decoder Extension Test Suite', () => {
 			const content = hover.contents[0] as vscode.MarkdownString;
 			assert.ok(content.value.includes('```javascript'));
 			assert.ok(content.value.match(/```/g)!.length >= 2);
+		});
+	});
+
+	suite('isValidJWT', () => {
+		test('Should validate a valid JWT token', () => {
+			const validToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+			assert.strictEqual(isValidJWT(validToken), true);
+		});
+
+		test('Should validate JWT with Bearer prefix', () => {
+			const tokenWithBearer = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+			assert.strictEqual(isValidJWT(tokenWithBearer), true);
+		});
+
+		test('Should validate JWT with whitespace', () => {
+			const tokenWithWhitespace = '  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c  ';
+			assert.strictEqual(isValidJWT(tokenWithWhitespace), true);
+		});
+
+		test('Should reject token with only 2 parts', () => {
+			const invalidToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ';
+			assert.strictEqual(isValidJWT(invalidToken), false);
+		});
+
+		test('Should reject token with more than 3 parts', () => {
+			const invalidToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c.extra';
+			assert.strictEqual(isValidJWT(invalidToken), false);
+		});
+
+		test('Should reject empty string', () => {
+			assert.strictEqual(isValidJWT(''), false);
+		});
+
+		test('Should reject null or undefined', () => {
+			assert.strictEqual(isValidJWT(null as any), false);
+			assert.strictEqual(isValidJWT(undefined as any), false);
+		});
+
+		test('Should reject token with invalid characters', () => {
+			const invalidToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWI@invalid!.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+			assert.strictEqual(isValidJWT(invalidToken), false);
+		});
+
+		test('Should reject token with empty parts', () => {
+			const invalidToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c';
+			assert.strictEqual(isValidJWT(invalidToken), false);
+		});
+
+		test('Should reject non-JWT strings', () => {
+			assert.strictEqual(isValidJWT('This is not a JWT'), false);
+			assert.strictEqual(isValidJWT('random.text.here'), false);
+			assert.strictEqual(isValidJWT('123.456.789'), false);
 		});
 	});
 

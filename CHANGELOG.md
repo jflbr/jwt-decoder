@@ -4,10 +4,16 @@ All notable changes to the "jwt-decoder" extension will be documented in this fi
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
-## [1.2.0] 2026-01-09
-### Added
-- Comprehensive test suite with 11 tests covering:
+## [1.3.0] 2026-01-09
+### Added 
+- Automatic clipboard detection for JWT tokens
+  - When no text is selected, the extension automatically checks clipboard for valid JWT
+  - Smart validation ensures only valid JWTs are auto-decoded
+  - Seamless fallback to input box if clipboard doesn't contain a valid JWT
+- JWT validation function to verify token structure and format
+- Comprehensive test suite with 23 tests covering:
   - JWT token decoding functionality
+  - JWT validation (valid/invalid tokens, edge cases)
   - Hover content management
   - Extension activation and command registration
   - Edge cases and error handling

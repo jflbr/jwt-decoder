@@ -22,8 +22,8 @@ If you call the extension cammand against a `selected JWT string` from an Untitl
 
 ![](images/demo-from-untitled-document.gif)
 
-### From input box to message box
+### From Clipboard or Input Box (fallback)
 
-From any document, fire the extension command without text selection. Paste your JWT, hit enter and your decoded token will appear in a message box at the right bottom corner. 
+From any document, fire the extension command without text selection. The extension will attempt to decode the clipboard value if it's a valid JWT. Otherwise, you'll be prompted to enter your JWT manually. The decoded token will appear in a message box at the right bottom corner. 
 
 ![](images/demo-from-input-box.gif)

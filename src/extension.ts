@@ -1,6 +1,6 @@
 
 import * as vscode from 'vscode';
-import { decodeToken } from './jwt';
+import { decodeToken, isValidJWT } from './jwt';
 import { setHoverContent } from './jwt';
 
 
@@ -56,7 +56,14 @@ export function activate(context: vscode.ExtensionContext) {
             hoverProvider.setTokenPosition(textEditor.selection.start);
 		}
 		else {
-			token = await vscode.window.showInputBox({ placeHolder: 'Paste your base64 encoded JWT here' });
+			// Try to get JWT from clipboard first
+			const clipboardContent = await vscode.env.clipboard.readText();
+			if (clipboardContent && isValidJWT(clipboardContent)) {
+				token = clipboardContent.trim();
+			} else {
+				// Fallback to input box if clipboard doesn't contain a valid JWT
+				token = await vscode.window.showInputBox({ placeHolder: 'Paste your base64 encoded JWT here' });
+			}
 		}
 		if (token === null){
 			vscode.window.showWarningMessage("Base64 encoded JWT required");

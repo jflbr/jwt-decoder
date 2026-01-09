@@ -4,15 +4,12 @@
 	"description": "A simple JWT decoder extension for VS Code",
 	"icon": "images/icon.png",
 	"publisher": "jflbr",
-	"version": "1.1.1",
+	"version": "1.3.0",
 	"engines": {
-		"vscode": "^1.36.0"
+		"vscode": "^1.85.0"
 	},
 	"categories": [
 		"Other"
-	],
-	"activationEvents": [
-		"onCommand:extension.jwt-decoder"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
@@ -31,15 +28,14 @@
 		"test": "node ./out/test/runTest.js"
 	},
 	"devDependencies": {
-		"@types/glob": "^7.1.1",
-		"@types/mocha": "^5.2.6",
-		"@types/node": "^10.12.21",
-		"@types/vscode": "^1.36.0",
-		"glob": "^7.1.4",
-		"mocha": "^6.1.4",
-		"typescript": "^3.3.1",
-		"tslint": "^5.12.1",
-		"vscode-test": "^1.0.0-next.0"
+		"@types/glob": "^8.1.0",
+		"@types/mocha": "^10.0.9",
+		"@types/node": "^20.17.10",
+		"@types/vscode": "^1.85.0",
+		"@vscode/test-electron": "^2.4.1",
+		"glob": "^13.0.0",
+		"mocha": "^10.8.2",
+		"typescript": "^5.7.2"
 	},
 	"repository": {
 		"url": "https://github.com/jflbr/jwt-decoder.git",

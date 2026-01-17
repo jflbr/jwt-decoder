@@ -1,4 +1,8 @@
-# jwt-decoder | [![Install on VS Code](https://img.shields.io/badge/VS_Code-Install-blue?logo=visualstudiocode)](https://marketplace.visualstudio.com/items?itemName=jflbr.jwt-decoder)
+# jwt-decoder
+
+[![Install on VS Code](https://img.shields.io/badge/VS_Code-Install-blue?logo=visualstudiocode)](https://marketplace.visualstudio.com/items?itemName=jflbr.jwt-decoder)
+![Version](https://img.shields.io/vscode-marketplace/v/jflbr.jwt-decoder)
+![Installs](https://img.shields.io/vscode-marketplace/i/jflbr.jwt-decoder)
 
 A simple VS Code extension to decode your JSON Web Tokens (JWT)
 
